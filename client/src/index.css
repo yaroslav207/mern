@@ -1,2 +1,12 @@
 @import "~materialize-css/dist/css/materialize.min.css";
 
+.auth-card {
+    height: 100vh;
+    margin-bottom: 0;
+    color: #26a59a;
+}
+
+#pass, #e-mail{
+    color: white;
+}
+
