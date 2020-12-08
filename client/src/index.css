@@ -5,7 +5,9 @@
     margin-bottom: 0;
     color: #26a59a;
 }
-
+h1{
+    text-align: center;
+}
 #pass, #e-mail{
     color: white;
 }
