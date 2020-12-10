@@ -1,31 +1,43 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import "materialize-css"
 import {useHttp} from '../hooks/http.hook'
 import {useMessage} from "../hooks/message.hook";
+import {AuthContext} from "../context/AuthContext";
 
 function AuthPage() {
+    const auth = useContext(AuthContext)
     const message = useMessage();
     const {loading, error, request, clearError} = useHttp()
     const [form, setForm] = useState({
         email: '', password: ''
     })
 
-
     const changeHandler = (event) => {
-        setForm({...form, [event.target.name]: [event.target.value]})
+        setForm({...form, [event.target.name]: event.target.value})
     }
+
     const registerHandler = async () => {
         try{
             const data = await request('/api/auth/register', 'POST', {...form})
-            console.log(data)
+            message(data.message)
         }catch (e) {
-
+            console.log(e)
         }
     }
+    const loginHandler = async () => {
+        try{
+            const data = await request('/api/auth/login', 'POST', {...form})
+            console.log(data)
+            auth.login(data.token, data.userId)
+        }catch (e) {
+            console.log(e)
+        }
+    }
+
     useEffect(() => {
         message(error)
         clearError()
-    }, [error, message])
+    }, [error, message, clearError])
 
     return (
         <div className="row auth-card ">
@@ -41,6 +53,7 @@ function AuthPage() {
                                     id="e-mail"
                                     className="autocomplete"
                                     name="email"
+                                    value={form.email}
                                     onChange={changeHandler}
                                 />
                                     <label htmlFor="e-mail">E-mail</label>
@@ -53,6 +66,7 @@ function AuthPage() {
                                     id="pass"
                                     className="autocomplete"
                                     name="password"
+                                    value={form.password}
                                     onChange={changeHandler}
                                 />
                                 <label htmlFor="pass">Пароль</label>
@@ -63,6 +77,7 @@ function AuthPage() {
                         <a
                             className="btn"
                             disabled={loading}
+                            onClick={loginHandler}
                         >
                             Войти
                         </a>

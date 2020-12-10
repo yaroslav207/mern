@@ -8,7 +8,15 @@
 h1{
     text-align: center;
 }
-#pass, #e-mail{
+#pass, #e-mail, #link{
     color: white;
+}
+.create-link-wrapper{
+    padding-top: 4rem;
+}
+.loader{
+    display: flex;
+    justify-content: center;
+    padding-top: 4rem;
 }
 

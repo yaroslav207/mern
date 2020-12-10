@@ -14,10 +14,11 @@ export const useHttp = () => {
             setLoading(true)
             const response = await fetch(url, {method, body, headers});
             const data = await response.json();
-
+            setLoading(false)
             if(!response.ok){
-                throw new Error(data.massage || 'Что-то пошло не так')
+                throw new Error(data.message || 'Что-то пошло нb так')
             }
+            return data
         } catch (e) {
             setLoading(false);
             setError(e.message);
@@ -25,9 +26,9 @@ export const useHttp = () => {
         }
     }, [])
 
-    const clearError = () => {
+    const clearError = useCallback(() => {
         setError(null)
-    }
+    }, [] )
 
     return {loading, request, error, clearError}
 }

@@ -26,19 +26,18 @@ router.post(
 
             const {email, password} = req.body;
 
-            const candidate = await User.findOne({email: email[0]})
-            console.log(candidate)
+            const candidate = await User.findOne({email: email})
+            console.log(req.body)
             if (candidate) {
                 console.log(true)
                 res.status(400).json({message: 'Такой пользователь уже существует'})
             }
-            console.log(false)
+
             const hashedPassword = await bcrypt.hash(password, 12)
             const user = new User({email, password: hashedPassword})
 
             await user.save();
-
-            res.status(200).json({message: 'Пользователь создан}'})
+            res.status(200).json({message: 'Пользователь создан'})
 
         } catch (e) {
             res.status(500).json({message: `Что-то пошло не так, попробуйте снова ${e}`})
@@ -53,7 +52,6 @@ router.post(
     ],
     async (req, res) => {
         try {
-
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({
@@ -64,13 +62,13 @@ router.post(
 
             const {email, password} = req.body;
 
-            const user = await User.findOne(email)
-
+            const user = await User.findOne({email})
+            console.log(user)
             if(!user){
                 res.status(400).json({message: 'Пользователь не найден'})
             }
 
-            const isMatch = await bcrypt.compare(password. user.password)
+            const isMatch = await bcrypt.compare(password, user.password)
 
             if(!isMatch){
                 return res.status(400).json({message: 'Неверный пароль'})
@@ -81,11 +79,12 @@ router.post(
                 config.get('jwtSecret'),
                 {expiresIn: '1h'}
                 )
-            res.json({token, userId: user.Id})
+            res.json({token, userId: user.id})
 
         } catch (e) {
-            res.status(500).json({massage: 'Что-то пошло не так'})
+            res.status(500).json({message: 'Что-то пошло не так'})
         }
-    })
+    }
+    )
 
 module.exports = router
